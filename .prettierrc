@@ -1,0 +1,13 @@
+{
+	"singleQuote": true,
+	"trailingComma": "all",
+	"semi": true,
+	"useTabs": false,
+	"editor.formatOnSave": true,
+	"jsxSingleQuote": true,
+	"printWidth": 100,
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": true
+	},
+	"arrowParens": "avoid"
+}
