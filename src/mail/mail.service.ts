@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import * as SendGrid from '@sendgrid/mail';
@@ -17,8 +22,13 @@ export class MailService {
     SendGrid.setApiKey(this.configService.get<string>('SEND_GRID_KEY'));
   }
 
-  async sendOtpVerification(email: string) {
+  async sendOtpVerification(email: string, isUser: boolean) {
     if (!email) throw new ForbiddenException('Email is required');
+
+    if (isUser) {
+      const existUser = await this.userModel.findOne({ email });
+      if (!existUser) throw new UnauthorizedException('User not found');
+    }
 
     const otp = Math.floor(100000 + Math.random() * 900000);
     const salt = await genSalt(10);
