@@ -5,7 +5,6 @@ import { compare, genSalt, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/user/user.model';
 import { LoginAuthDto } from './dto/login.dto';
-import { RegisterAuthDto } from './dto/register.dto';
 import { TokenDto } from './dto/token.dto';
 
 @Injectable()
@@ -15,7 +14,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(dto: RegisterAuthDto) {
+  async register(dto: LoginAuthDto) {
     const existUser = await this.isExistUser(dto.email);
     if (existUser)
       throw new BadRequestException('User with that email is already exist in the system');
