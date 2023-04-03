@@ -22,7 +22,10 @@ export class AuthService {
     const salt = await genSalt(10);
     const passwordHash = await hash(dto.password, salt);
 
-    const newUser = await this.userModel.create({ ...dto, password: passwordHash });
+    const newUser = await this.userModel.create({
+      ...dto,
+      password: dto.password.length ? passwordHash : '',
+    });
 
     const token = await this.issueTokenPair(String(newUser._id));
 
@@ -32,8 +35,10 @@ export class AuthService {
   async login(dto: LoginAuthDto) {
     const existUser = await this.isExistUser(dto.email);
     if (!existUser) throw new BadRequestException('User not found');
-    const currentPassword = await compare(dto.password, existUser.password);
-    if (!currentPassword) throw new BadRequestException('Incorrect password');
+    if (dto.password.length) {
+      const currentPassword = await compare(dto.password, existUser.password);
+      if (!currentPassword) throw new BadRequestException('Incorrect password');
+    }
 
     const token = await this.issueTokenPair(String(existUser._id));
     return { user: this.getUserField(existUser), ...token };
@@ -50,6 +55,16 @@ export class AuthService {
 
     const token = await this.issueTokenPair(String(user._id));
     return { user: this.getUserField(user), ...token };
+  }
+
+  async checkUser(email: string) {
+    const user = await this.isExistUser(email);
+
+    if (user) {
+      return 'user';
+    } else {
+      return 'no-user';
+    }
   }
 
   async isExistUser(email: string): Promise<UserDocument> {

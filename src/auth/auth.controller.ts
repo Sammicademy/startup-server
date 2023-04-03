@@ -27,4 +27,10 @@ export class AuthController {
   async getNewTokens(@Body() dto: TokenDto) {
     return this.authService.getNewTokens(dto);
   }
+
+  @HttpCode(200)
+  @Post('check-user')
+  async checkUser(@Body() dto: { email: string }) {
+    return this.authService.checkUser(dto.email);
+  }
 }
