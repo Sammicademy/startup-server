@@ -21,7 +21,7 @@ export class UserService {
     const { email, password } = dto;
 
     const existUser = await this.userModel.findOne({ email });
-    if (!existUser) throw new UnauthorizedException('User not found');
+    if (!existUser) throw new UnauthorizedException('user_not_found');
 
     const salt = await genSalt(10);
     const hashPassword = await hash(password, salt);
