@@ -29,8 +29,8 @@ export class InstructorService {
     if (existInstructor)
       throw new BadRequestException('Instructor with that email already exist in our system');
 
-    const newInstructor = await this.instructorModel.create(data);
+    await this.instructorModel.create(data);
 
-    return newInstructor;
+    return 'Success';
   }
 }
