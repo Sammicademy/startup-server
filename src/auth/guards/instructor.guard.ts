@@ -9,9 +9,9 @@ export class OnlyInstructorGuard implements CanActivate {
     const request = context.switchToHttp().getRequest<{ user: UserDocument }>();
     const user = request.user;
 
-    if (user.role !== 'ISTRUCTOR')
+    if (user.role !== 'INSTRUCTOR')
       throw new ForbiddenException("Sorry you don't have access to the page");
 
-    return user.role === 'ISTRUCTOR' && true;
+    return user.role === 'INSTRUCTOR' && true;
   }
 }

@@ -8,6 +8,6 @@ export const Auth = (role: RoleUser = 'USER') => {
   return applyDecorators(
     (role === 'ADMIN' && UseGuards(JwtAuthGuard, OnlyAdminGuard)) ||
       (role === 'USER' && UseGuards(JwtAuthGuard)) ||
-      (role === 'ISTRUCTOR' && UseGuards(JwtAuthGuard, OnlyInstructorGuard)),
+      (role === 'INSTRUCTOR' && UseGuards(JwtAuthGuard, OnlyInstructorGuard)),
   );
 };
