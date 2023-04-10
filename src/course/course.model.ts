@@ -9,6 +9,9 @@ export class Course {
   @Prop({ type: SchemaMS.Types.ObjectId, ref: 'User' })
   author: User;
 
+  @Prop({ unique: true, required: true })
+  slug: string;
+
   @Prop()
   title: string;
 
