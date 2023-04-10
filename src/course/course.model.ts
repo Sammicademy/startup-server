@@ -35,6 +35,9 @@ export class Course {
 
   @Prop()
   price: number;
+
+  @Prop()
+  previewImage: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
