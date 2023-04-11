@@ -7,11 +7,12 @@ import { FileResponse } from './file.interface';
 export class FileService {
   async saveFile(file: Express.Multer.File, folder: string = 'default'): Promise<FileResponse> {
     const uploadFolder = `${path}/uploads/${folder}`;
+    const uniqueId = Math.floor(Math.random() * 9999);
     await ensureDir(uploadFolder);
-    await writeFile(`${uploadFolder}/${new Date().getTime()}-${file.originalname}`, file.buffer);
+    await writeFile(`${uploadFolder}/${uniqueId}-${file.originalname}`, file.buffer);
 
     const response: FileResponse = {
-      url: `/uploads/${folder}/${new Date().getTime()}-${file.originalname}`,
+      url: `/uploads/${folder}/${uniqueId}-${file.originalname}`,
       name: file.originalname,
     };
 
