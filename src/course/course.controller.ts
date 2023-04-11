@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, HttpCode, Param, Patch, Post } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { User } from 'src/user/decorators/user.decorator';
 import { CourseBodyDto } from './coourse.dto';
@@ -20,5 +20,12 @@ export class CourseController {
   @Auth('INSTRUCTOR')
   async editCourse(@Body() dto: CourseBodyDto, @Param('courseId') courseId: string) {
     return this.courseService.editCourse(dto, courseId);
+  }
+
+  @HttpCode(200)
+  @Delete('delete/:courseId')
+  @Auth('INSTRUCTOR')
+  async deleteCourse(@Param('courseId') courseId: string) {
+    return this.courseService.deleteCourse(courseId);
   }
 }
