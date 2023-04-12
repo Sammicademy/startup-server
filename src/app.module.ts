@@ -8,6 +8,8 @@ import { MailModule } from './mail/mail.module';
 import { UserModule } from './user/user.module';
 import { InstructorModule } from './instructor/instructor.module';
 import { FileModule } from './file/file.module';
+import { SectionModule } from './section/section.module';
+import { LessonModule } from './lesson/lesson.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { FileModule } from './file/file.module';
     MailModule,
     InstructorModule,
     FileModule,
+    SectionModule,
+    LessonModule,
   ],
 })
 export class AppModule {}
