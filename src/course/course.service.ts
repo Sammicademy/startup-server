@@ -29,4 +29,24 @@ export class CourseService {
     await this.courseModel.findByIdAndRemove(courseId);
     return 'Success';
   }
+
+  async activateCourse(courseId: string) {
+    const course = await this.courseModel.findByIdAndUpdate(
+      courseId,
+      { $set: { isActive: true } },
+      { new: true },
+    );
+
+    return course;
+  }
+
+  async draftCourse(courseId: string) {
+    const course = await this.courseModel.findByIdAndUpdate(
+      courseId,
+      { $set: { isActive: false } },
+      { new: true },
+    );
+
+    return course;
+  }
 }
