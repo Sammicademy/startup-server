@@ -30,7 +30,6 @@ export class SectionController {
 
   @HttpCode(200)
   @Get('get/:courseId')
-  @Auth('INSTRUCTOR')
   async getSection(@Param('courseId') courseId: string) {
     return this.sectionService.getSection(courseId);
   }
