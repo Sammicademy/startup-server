@@ -48,7 +48,9 @@ export class SectionService {
   }
 
   async getSection(courseId: string) {
-    const course = await this.courseModel.findById(courseId).populate('sections');
+    const course = await this.courseModel
+      .findById(courseId)
+      .populate({ path: 'sections', populate: { path: 'lessons' } });
 
     return course.sections;
   }
