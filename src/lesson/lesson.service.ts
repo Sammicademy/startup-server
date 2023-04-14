@@ -14,13 +14,15 @@ export class LessonService {
 
   async createLesson(body: LessonDto, sectionId: string) {
     const lesson = await this.lessonModel.create(body);
-    const section = await this.sectionModel.findByIdAndUpdate(
-      sectionId,
-      {
-        $push: { lessons: lesson._id },
-      },
-      { new: true },
-    );
+    const section = await this.sectionModel
+      .findByIdAndUpdate(
+        sectionId,
+        {
+          $push: { lessons: lesson._id },
+        },
+        { new: true },
+      )
+      .populate('lessons');
 
     return section;
   }
@@ -33,11 +35,9 @@ export class LessonService {
 
   async deleteLesson(sectionId: string, lessonId: string) {
     await this.lessonModel.findByIdAndRemove(lessonId);
-    const section = this.sectionModel.findByIdAndUpdate(
-      sectionId,
-      { $pull: { lessons: lessonId } },
-      { new: true },
-    );
+    const section = this.sectionModel
+      .findByIdAndUpdate(sectionId, { $pull: { lessons: lessonId } }, { new: true })
+      .populate('lessons');
 
     return section;
   }
