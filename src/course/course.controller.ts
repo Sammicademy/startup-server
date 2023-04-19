@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, HttpCode, Param, Patch, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { User } from 'src/user/decorators/user.decorator';
 import { CourseBodyDto } from './coourse.dto';
@@ -51,5 +62,11 @@ export class CourseController {
     @Body() body: { sections: string[] },
   ) {
     return this.courseService.dragCourseSections(courseId, body.sections);
+  }
+
+  @HttpCode(200)
+  @Get('all')
+  async getCourses(@Query('language') language: string, @Query('limit') limit: string) {
+    return this.courseService.getCourses(language, limit);
   }
 }

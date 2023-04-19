@@ -57,4 +57,30 @@ export class CourseService {
 
     return course.sections;
   }
+
+  async getCourses(language: string, limit: string) {
+    const courses = await this.courseModel
+      .find({ language })
+      .populate('sections')
+      .populate('author')
+      .limit(Number(limit))
+      .sort({ createdAt: -1 })
+      .exec();
+
+    return courses.map(course => this.getSpecificFieldCourse(course));
+  }
+
+  getSpecificFieldCourse(course: CourseDocument) {
+    return {
+      title: course.title,
+      previewImage: course.previewImage,
+      price: course.price,
+      level: course.level,
+      author: {
+        fullName: course.author.fullName,
+        avatar: course.author.avatar,
+      },
+      lessonCount: course.sections.map(c => c.lessons.length).reduce((a, b) => +a + +b, 0),
+    };
+  }
 }

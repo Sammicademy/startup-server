@@ -48,6 +48,9 @@ export class Course {
 
   @Prop()
   exerpt: string;
+
+  @Prop()
+  language: string;
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
