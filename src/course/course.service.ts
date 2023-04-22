@@ -35,8 +35,13 @@ export class CourseService {
     return await this.courseModel.findByIdAndUpdate(courseId, dto, { new: true });
   }
 
-  async deleteCourse(courseId: string) {
+  async deleteCourse(courseId: string, userId: string) {
     await this.courseModel.findByIdAndRemove(courseId);
+    await this.instructorModel.findOneAndUpdate(
+      { author: userId },
+      { $pull: { courses: courseId } },
+      { new: true },
+    );
     return 'Success';
   }
 

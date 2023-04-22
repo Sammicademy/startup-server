@@ -3,4 +3,6 @@ export class InstructorApplyDto {
   lastName: string;
   email: string;
   socialMedia: string;
+  job: string;
+  language: string;
 }

@@ -15,18 +15,22 @@ export class InstructorService {
   ) {}
 
   async applyAsInstructor(dto: InstructorApplyDto) {
-    const { email, firstName, lastName, socialMedia } = dto;
+    const { email, firstName, lastName, socialMedia, job, language } = dto;
     let user: UserDocument;
 
     const existUser = await this.userModel.findOne({ email });
     user = existUser;
+
+    if (user) {
+      await this.userModel.findByIdAndUpdate(user._id, { $set: { job } });
+    }
 
     if (!existUser) {
       const newUser = await this.userModel.create({ ...dto, fullName: `${firstName} ${lastName}` });
       user = newUser;
     }
 
-    const data = { socialMedia, author: user._id };
+    const data = { socialMedia, author: user._id, language };
     const existInstructor = await this.instructorModel.findOne({ author: user._id });
 
     if (existInstructor)

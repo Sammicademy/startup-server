@@ -36,8 +36,8 @@ export class CourseController {
   @HttpCode(200)
   @Delete('delete/:courseId')
   @Auth('INSTRUCTOR')
-  async deleteCourse(@Param('courseId') courseId: string) {
-    return this.courseService.deleteCourse(courseId);
+  async deleteCourse(@Param('courseId') courseId: string, @User('_id') _id: string) {
+    return this.courseService.deleteCourse(courseId, _id);
   }
 
   @HttpCode(200)
