@@ -14,6 +14,9 @@ export class Instructor {
 
   @Prop({ default: false })
   approved: boolean;
+
+  @Prop()
+  language: string;
 }
 
 export const InstructorSchema = SchemaFactory.createForClass(Instructor);

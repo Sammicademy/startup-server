@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { Auth } from 'src/auth/decorators/auth.decorator';
 import { User } from 'src/user/decorators/user.decorator';
 import { InstructorApplyDto } from './dto/instructor.dto';
@@ -26,5 +26,11 @@ export class InstructorController {
   @Auth('INSTRUCTOR')
   async getDetailedCourse(@Param('slug') slug: string) {
     return this.instructorService.getDetailedCourse(slug);
+  }
+
+  @HttpCode(200)
+  @Get('all')
+  async getInstructors(@Query('language') language: string, @Query('limit') limit: string) {
+    return this.instructorService.getInstructors(language, limit);
   }
 }
