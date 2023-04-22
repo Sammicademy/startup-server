@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Instructor, InstructorDocument } from 'src/instructor/instructor.model';
 import { CourseBodyDto } from './coourse.dto';
 import { Course, CourseDocument } from './course.model';
 
 @Injectable()
 export class CourseService {
-  constructor(@InjectModel(Course.name) private courseModel: Model<CourseDocument>) {}
+  constructor(
+    @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
+    @InjectModel(Instructor.name) private instructorModel: Model<InstructorDocument>,
+  ) {}
 
   async createCourse(dto: CourseBodyDto, id: string) {
     const slugify = (str: string) =>
@@ -18,7 +22,13 @@ export class CourseService {
         .replace(/^-+|-+$/g, '');
 
     const slug = slugify(dto.title);
-    return await this.courseModel.create({ ...dto, slug: slug, author: id });
+    const course = await this.courseModel.create({ ...dto, slug: slug, author: id });
+    await this.instructorModel.findOneAndUpdate(
+      { author: id },
+      { $push: { courses: course._id } },
+      { new: true },
+    );
+    return course;
   }
 
   async editCourse(dto: CourseBodyDto, courseId: string) {
@@ -61,7 +71,7 @@ export class CourseService {
   async getCourses(language: string, limit: string) {
     const courses = await this.courseModel
       .find({ language })
-      .populate('sections')
+      .populate({ path: 'sections', populate: { path: 'lessons' } })
       .populate('author')
       .limit(Number(limit))
       .sort({ createdAt: -1 })
@@ -81,6 +91,31 @@ export class CourseService {
         avatar: course.author.avatar,
       },
       lessonCount: course.sections.map(c => c.lessons.length).reduce((a, b) => +a + +b, 0),
+      totalHour: this.getTotalHours(course),
     };
+  }
+
+  getTotalHours(course: CourseDocument) {
+    let totalHours: number = 0;
+
+    for (let i = 0; i < course.sections.length; i++) {
+      const sections = course.sections[i];
+      let sectionHours = 0;
+
+      for (let j = 0; j < sections.lessons.length; j++) {
+        const lesson = sections.lessons[j];
+        const hours = parseInt(String(lesson.hour));
+        const seconds = parseInt(String(lesson.second));
+        const minutes = parseInt(String(lesson.minute));
+        const totalMinutes = hours * 60 + minutes;
+        const totalSeconds = totalMinutes * 60 + seconds;
+        const totalHourLesson = totalSeconds / 3600;
+        sectionHours += totalHourLesson;
+      }
+
+      totalHours += sectionHours;
+    }
+
+    return totalHours.toFixed(1);
   }
 }
