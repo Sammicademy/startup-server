@@ -64,8 +64,8 @@ export class InstructorService {
     return {
       avatar: instructor.author.avatar,
       fullName: instructor.author.fullName,
-      job: instructor.author.job,
       totalCourses: instructor.courses.length,
+      job: instructor.author.job,
     };
   }
 }

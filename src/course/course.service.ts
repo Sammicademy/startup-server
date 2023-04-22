@@ -28,7 +28,7 @@ export class CourseService {
       { $push: { courses: course._id } },
       { new: true },
     );
-    return course;
+    return 'Success';
   }
 
   async editCourse(dto: CourseBodyDto, courseId: string) {
@@ -101,26 +101,26 @@ export class CourseService {
   }
 
   getTotalHours(course: CourseDocument) {
-    let totalHours: number = 0;
+    let totalHour = 0;
 
-    for (let i = 0; i < course.sections.length; i++) {
-      const sections = course.sections[i];
-      let sectionHours = 0;
+    for (let s = 0; s < course.sections.length; s++) {
+      const section = course.sections[s];
+      let sectionHour = 0;
 
-      for (let j = 0; j < sections.lessons.length; j++) {
-        const lesson = sections.lessons[j];
+      for (let l = 0; l < section.lessons.length; l++) {
+        const lesson = section.lessons[l];
         const hours = parseInt(String(lesson.hour));
         const seconds = parseInt(String(lesson.second));
         const minutes = parseInt(String(lesson.minute));
         const totalMinutes = hours * 60 + minutes;
         const totalSeconds = totalMinutes * 60 + seconds;
         const totalHourLesson = totalSeconds / 3600;
-        sectionHours += totalHourLesson;
+        sectionHour += totalHourLesson;
       }
 
-      totalHours += sectionHours;
+      totalHour += sectionHour;
     }
 
-    return totalHours.toFixed(1);
+    return totalHour.toFixed(1);
   }
 }
