@@ -22,7 +22,9 @@ export class InstructorService {
     user = existUser;
 
     if (user) {
-      await this.userModel.findByIdAndUpdate(user._id, { $set: { job } });
+      await this.userModel.findByIdAndUpdate(user._id, {
+        $set: { job, fullName: `${firstName} ${lastName}` },
+      });
     }
 
     if (!existUser) {
