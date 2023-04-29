@@ -69,4 +69,10 @@ export class CourseController {
   async getCourses(@Query('language') language: string, @Query('limit') limit: string) {
     return this.courseService.getCourses(language, limit);
   }
+
+  @HttpCode(200)
+  @Get('admin-all-courses')
+  async getAllAdminCourses() {
+    return this.courseService.getAdminCourses();
+  }
 }

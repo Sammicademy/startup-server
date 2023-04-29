@@ -123,4 +123,8 @@ export class CourseService {
 
     return totalHour.toFixed(1);
   }
+
+  async getAdminCourses() {
+    return this.courseModel.find().exec();
+  }
 }
