@@ -13,6 +13,9 @@ export class Books {
 
   @Prop()
   image: string;
+
+  @Prop()
+  pdf: string;
 }
 
 export const BooksSchema = SchemaFactory.createForClass(Books);
