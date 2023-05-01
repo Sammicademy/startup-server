@@ -23,6 +23,9 @@ export class User {
 
   @Prop()
   job: string;
+
+  @Prop()
+  createdAt: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
