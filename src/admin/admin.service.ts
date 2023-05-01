@@ -59,6 +59,20 @@ export class AdminService {
     return users.map(user => this.getUserSpecificFiled(user));
   }
 
+  async searchUser(email: string, limit: number) {
+    let users: UserDocument[];
+    if (email) {
+      users = await this.userModel.find({}).exec();
+    } else {
+      users = await this.userModel.find({}).limit(limit).exec();
+    }
+    const searchedUser = users.filter(
+      user => user.email.toLowerCase().indexOf(email.toLowerCase()) !== -1,
+    );
+
+    return searchedUser.map(user => this.getUserSpecificFiled(user));
+  }
+
   getSpecificField(instructor: InstructorDocument) {
     return {
       approved: instructor.approved,
