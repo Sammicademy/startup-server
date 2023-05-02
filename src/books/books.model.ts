@@ -16,6 +16,9 @@ export class Books {
 
   @Prop()
   pdf: string;
+
+  @Prop()
+  category: string;
 }
 
 export const BooksSchema = SchemaFactory.createForClass(Books);
