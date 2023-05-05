@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
+import { BooksModule } from './books/books.module';
 import { getMongoDBConfig } from './config/mongo.config';
 import { CourseModule } from './course/course.module';
-import { MailModule } from './mail/mail.module';
-import { UserModule } from './user/user.module';
-import { InstructorModule } from './instructor/instructor.module';
 import { FileModule } from './file/file.module';
-import { SectionModule } from './section/section.module';
+import { InstructorModule } from './instructor/instructor.module';
 import { LessonModule } from './lesson/lesson.module';
-import { AdminModule } from './admin/admin.module';
-import { BooksModule } from './books/books.module';
+import { MailModule } from './mail/mail.module';
+import { SectionModule } from './section/section.module';
+import { UserModule } from './user/user.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { BooksModule } from './books/books.module';
     LessonModule,
     AdminModule,
     BooksModule,
+    PaymentModule,
   ],
 })
 export class AppModule {}
