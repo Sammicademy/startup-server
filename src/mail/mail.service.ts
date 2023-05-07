@@ -9,6 +9,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import * as SendGrid from '@sendgrid/mail';
 import { compare, genSalt, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
+import { Books, BooksDocument } from 'src/books/books.model';
 import { User, UserDocument } from 'src/user/user.model';
 import { Otp, OtpDocument } from './otp.model';
 
@@ -17,6 +18,7 @@ export class MailService {
   constructor(
     @InjectModel(Otp.name) private otpModel: Model<OtpDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Books.name) private booksModel: Model<BooksDocument>,
     private readonly configService: ConfigService,
   ) {
     SendGrid.setApiKey(this.configService.get<string>('SEND_GRID_KEY'));
@@ -61,6 +63,23 @@ export class MailService {
     if (!validOtp) throw new BadRequestException('otp_is_incorrect');
 
     await this.otpModel.deleteMany({ email });
+    return 'Success';
+  }
+
+  async recieveBooks(bookId: string, userId: string) {
+    const user = await this.userModel.findById(userId);
+    const book = await this.booksModel.findById(bookId);
+
+    const emailData = {
+      to: user.email,
+      subject: 'Ordered book',
+      from: 'no-reply@sammi.ac',
+      html: `
+				<a href="${book.pdf}">Your ordered book - ${book.title}</a>
+			`,
+    };
+
+    await SendGrid.send(emailData);
     return 'Success';
   }
 }
