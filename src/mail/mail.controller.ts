@@ -1,4 +1,6 @@
 import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Auth } from 'src/auth/decorators/auth.decorator';
+import { User } from 'src/user/decorators/user.decorator';
 import { MailService } from './mail.service';
 
 @Controller('mail')
@@ -15,5 +17,12 @@ export class MailController {
   @Post('verify-otp')
   async verifyOtp(@Body() dto: { email: string; otpVerification: string }) {
     return this.mailService.verifyOtp(dto.email, dto.otpVerification);
+  }
+
+  @HttpCode(200)
+  @Post('books')
+  @Auth('USER')
+  async recieveBooks(@Body() dto: { bookId: string }, @User('email') email: string) {
+    return this.mailService.recieveBooks(dto.bookId, email);
   }
 }

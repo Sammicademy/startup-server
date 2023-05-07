@@ -1,15 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { InjectStripe } from 'nestjs-stripe';
+import { CustomerService } from 'src/customer/customer.service';
 import Stripe from 'stripe';
+import { PaymentBooksDto } from './dto/paymnet-books.dto';
 
 @Injectable()
 export class PaymentService {
-  constructor(@InjectStripe() private readonly stripeClient: Stripe) {}
+  constructor(
+    @InjectStripe() private readonly stripeClient: Stripe,
+    private readonly customerService: CustomerService,
+  ) {}
 
-  async paymentBooks(price: number) {
+  async paymentBooks(dto: PaymentBooksDto, userId) {
+    const card = await this.customerService.atachPaymentMethod(dto.paymentMethod, userId);
+    const customer = await this.customerService.getCustomer(userId);
+
     const paymnetIntent = await this.stripeClient.paymentIntents.create({
-      amount: price * 100,
+      amount: dto.price * 100,
       currency: 'usd',
+      payment_method: card.id,
+      customer: customer.id,
     });
 
     return paymnetIntent.client_secret;
