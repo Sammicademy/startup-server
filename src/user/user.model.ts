@@ -25,6 +25,9 @@ export class User {
   job: string;
 
   @Prop()
+  customerId: string;
+
+  @Prop()
   createdAt: string;
 }
 
