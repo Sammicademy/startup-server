@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { InjectStripe } from 'nestjs-stripe';
@@ -53,5 +53,17 @@ export class CustomerService {
     });
 
     return atachedCard;
+  }
+
+  async getSavedCard(customerId: string) {
+    if (!customerId) throw new UnauthorizedException();
+
+    const cards = await this.stripeClient.paymentMethods.list({
+      customer: customerId,
+      limit: 3,
+      type: 'card',
+    });
+
+    return cards.data;
   }
 }
