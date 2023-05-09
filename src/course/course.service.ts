@@ -91,6 +91,8 @@ export class CourseService {
       previewImage: course.previewImage,
       price: course.price,
       level: course.level,
+      category: course.category,
+      _id: course._id,
       author: {
         fullName: course.author.fullName,
         avatar: course.author.avatar,
