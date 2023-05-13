@@ -58,4 +58,20 @@ export class PaymentService {
     });
     return products.data;
   }
+
+  async createSubscription(userID: string, body: PaymentBooksDto) {
+    const customer = await this.customerService.getCustomer(userID);
+    const card = await this.customerService.atachPaymentMethod(body.paymentMethod, userID);
+
+    const subscription = await this.stripeClient.subscriptions.create({
+      customer: customer.id,
+      items: [{ price: String(body.price) }],
+      payment_behavior: 'default_incomplete',
+      expand: ['latest_invoice.payment_intent'],
+      default_payment_method: card.id,
+    });
+
+    // @ts-ignore
+    return subscription.latest_invoice.payment_intent.client_secret;
+  }
 }

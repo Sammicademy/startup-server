@@ -28,4 +28,11 @@ export class PaymentController {
   listProducts() {
     return this.paymentService.listProducts();
   }
+
+  @HttpCode(200)
+  @Post('create-subscription')
+  @Auth('USER')
+  createSubscription(@User('_id') _id: string, @Body() dto: PaymentBooksDto) {
+    return this.paymentService.createSubscription(_id, dto);
+  }
 }
