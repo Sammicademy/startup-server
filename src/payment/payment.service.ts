@@ -50,4 +50,12 @@ export class PaymentService {
 
     return paymnetIntent.client_secret;
   }
+
+  async listProducts() {
+    const products = await this.stripeClient.products.list({
+      limit: 3,
+      expand: ['data.default_price'],
+    });
+    return products.data;
+  }
 }
