@@ -28,6 +28,9 @@ export class User {
   customerId: string;
 
   @Prop()
+  instructorAccountId: string;
+
+  @Prop()
   createdAt: string;
 }
 
