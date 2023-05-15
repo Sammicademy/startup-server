@@ -74,4 +74,18 @@ export class PaymentService {
 
     return subscription;
   }
+
+  async instructorBalance(instructorAccountId: string) {
+    const balances = await this.stripeClient.balance.retrieve({
+      stripeAccount: instructorAccountId,
+    });
+
+    return balances;
+  }
+
+  async instructorConnectLogin(instructorAccountId: string) {
+    const loginLink = await this.stripeClient.accounts.createLoginLink(instructorAccountId);
+
+    return loginLink.url;
+  }
 }
