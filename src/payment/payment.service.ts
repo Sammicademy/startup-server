@@ -88,4 +88,10 @@ export class PaymentService {
 
     return loginLink.url;
   }
+
+  async applyCoupon(id: string) {
+    const coupon = await this.stripeClient.coupons.retrieve(id);
+
+    return coupon;
+  }
 }
