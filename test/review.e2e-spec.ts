@@ -2,8 +2,8 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { disconnect, Types } from 'mongoose';
 import * as request from 'supertest';
+import { AppModule } from '../src/app.module';
 import { CreateReviewDto, EditReviewDto } from '../src/review/dto/review.dto';
-import { AppModule } from './../src/app.module';
 
 const courseId = new Types.ObjectId().toHexString();
 

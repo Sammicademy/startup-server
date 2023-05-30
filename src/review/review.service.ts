@@ -39,7 +39,7 @@ export class ReviewService {
   }
 
   async getReview(courseId: string) {
-    const review = await this.reviewModel.find({ course: courseId });
+    const review = await this.reviewModel.find({ course: courseId }).exec();
 
     return review;
   }
