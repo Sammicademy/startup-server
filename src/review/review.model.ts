@@ -13,7 +13,7 @@ export class Review {
   @Prop()
   summary: string;
 
-  @Prop({ type: SchemaMS.Types.ObjectId, ref: 'Course' })
+  @Prop({ type: SchemaMS.Types.ObjectId, ref: 'User' })
   author: User;
 
   @Prop({ type: SchemaMS.Types.ObjectId, ref: 'Course' })
