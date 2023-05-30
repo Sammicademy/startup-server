@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateReviewDto, EditReviewDto } from './dto/review.dto';
@@ -15,6 +15,10 @@ export class ReviewService {
   }
 
   async deleteReview(reviewId: string) {
+    const isReview = await this.reviewModel.findById(reviewId);
+
+    if (!isReview) throw new NotFoundException('Review with id not found');
+
     const review = await this.reviewModel.findByIdAndRemove(reviewId);
 
     return review._id;

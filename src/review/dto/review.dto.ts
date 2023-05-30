@@ -7,5 +7,5 @@ export class CreateReviewDto {
 
 export class EditReviewDto {
   summary: string;
-  rating: string;
+  rating: number;
 }
