@@ -76,28 +76,116 @@ export class CourseService {
   }
 
   async getCourses(language: string, limit: string) {
-    const courses = await this.courseModel
-      .find({ language })
-      .populate({ path: 'sections', populate: { path: 'lessons' } })
-      .populate('author')
+    const courses = (await this.courseModel
+      .aggregate([
+        {
+          $match: { language },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'author',
+            foreignField: '_id',
+            as: 'author',
+          },
+        },
+        {
+          $lookup: {
+            from: 'sections',
+            localField: 'sections',
+            foreignField: '_id',
+            as: 'sections',
+          },
+        },
+        {
+          $lookup: {
+            from: 'lessons',
+            localField: 'sections.lessons',
+            foreignField: '_id',
+            as: 'lessons',
+          },
+        },
+        {
+          $lookup: {
+            from: 'reviews',
+            localField: '_id',
+            foreignField: 'course',
+            as: 'reviews',
+          },
+        },
+        {
+          $addFields: {
+            reivewCount: { $size: '$reviews' },
+            reviewAvg: { $avg: '$reviews.rating' },
+          },
+        },
+        {
+          $unwind: '$author',
+        },
+        {
+          $project: {
+            _id: 1,
+            author: 1,
+            sections: {
+              $map: {
+                input: '$sections',
+                as: 'section',
+                in: {
+                  _id: '$$section._id',
+                  title: '$$section.title',
+                  lessons: {
+                    $map: {
+                      input: '$lessons',
+                      as: 'lesson',
+                      in: {
+                        _id: '$$lesson._id',
+                        name: '$$lesson.name',
+                        minute: '$$lesson.minute',
+                        second: '$$lesson.second',
+                        hour: '$$lesson.hour',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            slug: 1,
+            isActive: 1,
+            learn: 1,
+            requirements: 1,
+            tags: 1,
+            description: 1,
+            level: 1,
+            category: 1,
+            price: 1,
+            previewImage: 1,
+            title: 1,
+            exerpt: 1,
+            language: 1,
+            updatedAt: 1,
+            reivewCount: 1,
+            reviewAvg: 1,
+          },
+        },
+      ])
       .limit(Number(limit))
       .sort({ createdAt: -1 })
-      .exec();
+      .exec()) as (CourseDocument & { reivewCount: number; reviewAvg: number })[];
 
     return courses.map(course => this.getSpecificFieldCourse(course));
   }
 
   async getDetailedCourse(slug: string) {
-    const course = await this.courseModel
+    const course = (await this.courseModel
       .findOne({ slug })
       .populate({ path: 'sections', populate: { path: 'lessons' } })
       .populate('author')
-      .exec();
+      .exec()) as CourseDocument & { reivewCount: number; reviewAvg: number };
 
     return this.getSpecificFieldCourse(course);
   }
 
-  getSpecificFieldCourse(course: CourseDocument) {
+  getSpecificFieldCourse(course: CourseDocument & { reivewCount: number; reviewAvg: number }) {
     return {
       title: course.title,
       previewImage: course.previewImage,
@@ -119,6 +207,8 @@ export class CourseService {
       language: course.language,
       exerpt: course.exerpt,
       slug: course.slug,
+      reivewCount: course.reivewCount,
+      reviewAvg: course.reviewAvg,
     };
   }
 
