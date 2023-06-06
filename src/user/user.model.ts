@@ -34,6 +34,12 @@ export class User {
   @Prop()
   createdAt: string;
 
+  @Prop()
+  bio: string;
+
+  @Prop()
+  birthday: string;
+
   @Prop([{ type: SchemaMS.Types.ObjectId, ref: 'Course' }])
   courses: Course[];
 }
